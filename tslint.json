@@ -53,10 +53,17 @@
     ],
     "no-construct": true,
     "no-debugger": true,
+    "no-duplicate-imports": true,
     "no-duplicate-super": true,
     "no-empty": false,
     "no-empty-interface": true,
     "no-eval": true,
+    "no-import-side-effect": [
+      true,
+      {
+        "ignore-pattern": "/rxjs.*/"
+      }
+    ],
     "no-inferrable-types": [
       true,
       "ignore-params"
@@ -67,6 +74,7 @@
     "no-string-literal": false,
     "no-string-throw": true,
     "no-switch-case-fall-through": true,
+    "no-this-assignment": true,
     "no-trailing-whitespace": true,
     "no-unnecessary-initializer": true,
     "no-unused-expression": true,
@@ -127,8 +135,11 @@
       "pr",
       "kebab-case"
     ],
-    "angular-whitespace": [true, "check-interpolation"],
-    "no-output-on-prefix": true,
+    "angular-whitespace": [true, "check-semicolon", "check-interpolation", "check-pipe"],
+    "banana-in-box": true,
+    "contextual-life-cycle": true,
+    "templates-no-negated-async": true,
+    "use-view-encapsulation": true,
     "use-input-property-decorator": true,
     "use-output-property-decorator": true,
     "use-host-property-decorator": true,
@@ -137,6 +148,7 @@
     "use-life-cycle-interface": true,
     "use-pipe-transform-interface": true,
     "component-class-suffix": true,
-    "directive-class-suffix": true
+    "directive-class-suffix": true,
+    "invoke-injectable": true
   }
 }
