@@ -3,14 +3,17 @@ import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import 'rxjs/add/operator/do';
 import { HttpClient } from '@angular/common/http';
+
 import { UserModel } from './models/user.model';
+import { environment } from '../environments/environment';
+import { JwtInterceptorService } from './jwt-interceptor.service';
 
 @Injectable()
 export class UserService {
-  baseUrl = 'http://ponyracer.ninja-squad.com';
+  baseUrl = environment.baseUrl;
   userEvents = new BehaviorSubject<UserModel>(undefined);
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private jwtInterceptorService: JwtInterceptorService) {
     this.retrieveUser();
   }
 
@@ -28,6 +31,7 @@ export class UserService {
   storeLoggedInUser(user) {
     this.userEvents.next(user);
     window.localStorage.setItem('rememberMe', JSON.stringify(user));
+    this.jwtInterceptorService.setJwtToken(user.token);
   }
 
   retrieveUser() {
@@ -35,11 +39,13 @@ export class UserService {
     if (rememberMe) {
       const user = JSON.parse(rememberMe);
       this.userEvents.next(user);
+      this.jwtInterceptorService.setJwtToken(user.token);
     }
   }
 
   logout() {
     this.userEvents.next(null);
     localStorage.removeItem('rememberMe');
+    this.jwtInterceptorService.removeJwtToken();
   }
 }

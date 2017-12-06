@@ -1,11 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { HttpClient } from '@angular/common/http';
+
 import { RaceModel } from './models/race.model';
+import { environment } from '../environments/environment';
 
 @Injectable()
 export class RaceService {
-  baseUrl = 'http://ponyracer.ninja-squad.com';
+  baseUrl = environment.baseUrl;
   constructor(private http: HttpClient) {}
 
   list(): Observable<Array<RaceModel>> {
