@@ -3,16 +3,31 @@
     <div class="form-group">
       <label for="login" id="login-label">Login</label>
       <input id="login" class="form-control" type="text" formControlName="login">
-      <div *ngIf="loginCtrl.dirty && loginCtrl.hasError('required')">
+      <div id="login-required-error" *ngIf="loginCtrl.dirty && loginCtrl.hasError('required')">
         Login is required
+      </div>
+      <div id="login-length-error" *ngIf="loginCtrl.dirty && loginCtrl.hasError('minlength')">
+          Your login should be at least 3 characters
       </div>
     </div>
 
-    <div class="form-group">
-      <label for="password" id="password-label">Password</label>
-      <input id="password" class="form-control" type="password" formControlName="password">
-      <div *ngIf="passwordCtrl.dirty && passwordCtrl.hasError('required')">
-        Password is required
+    <div formGroupName="passwordForm">
+      <div class="form-group">
+        <label for="password" id="password-label">Password</label>
+        <input id="password" class="form-control" type="password" formControlName="password">
+        <div *ngIf="passwordCtrl.dirty && passwordCtrl.hasError('required')">
+          Password is required
+        </div>
+
+        <label for="confirmPassword" id="confirmPassword-label">Confirm password</label>
+        <input id="confirmPassword" type="password" class="form-control" formControlName="confirmPassword">
+        <div *ngIf="confirmPasswordCtrl.dirty && confirmPasswordCtrl.hasError('required')">
+          Confirm your password
+        </div>
+
+        <div id="password-matching-error" *ngIf="passwordForm.dirty && passwordForm.hasError('matchingError')">
+          Your password does not match
+        </div>
       </div>
     </div>
 
@@ -22,6 +37,13 @@
       <div *ngIf="birthYearCtrl.dirty && birthYearCtrl.hasError('required')">
         Birth year is required
       </div>
+      <div *ngIf="birthYearCtrl.dirty && birthYearCtrl.hasError('invalidYear')">
+        This is not a valid year
+      </div>
+    </div>
+
+    <div id="registration-error" *ngIf="registrationFailed">
+      Try again with another login.
     </div>
 
     <button class="btn btn-success" type="submit" [disabled]="userForm.invalid">Let’s go !</button>

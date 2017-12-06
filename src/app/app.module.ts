@@ -14,6 +14,7 @@ import { PonyComponent } from './pony/pony.component';
 import { FromNowPipe } from './from-now.pipe';
 import { HomeComponent } from './home/home.component';
 import { RegisterComponent } from './register/register.component';
+import { UserService } from './user.service';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,7 @@ import { RegisterComponent } from './register/register.component';
     RegisterComponent,
   ],
   imports: [BrowserModule, HttpClientModule, RouterModule.forRoot(ROUTES), ReactiveFormsModule],
-  providers: [RaceService],
+  providers: [RaceService, UserService],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
