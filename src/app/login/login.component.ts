@@ -22,6 +22,6 @@ export class LoginComponent implements OnInit {
     this.userService.authenticate(this.credentials).subscribe(() => {
       this.router.navigate(['/']);
       this.authenticationFailed = false;
-    }, error => (this.authenticationFailed = true));
+    }, () => (this.authenticationFailed = true));
   }
 }
