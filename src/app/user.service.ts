@@ -11,4 +11,8 @@ export class UserService {
     const body = { login, password, birthYear };
     return this.http.post(`${this.baseUrl}/api/users`, body);
   }
+  authenticate(crendentials): Observable<any> {
+    const body = crendentials;
+    return this.http.post(`${this.baseUrl}/api/users/authentication`, body);
+  }
 }
