@@ -4,7 +4,7 @@
   </button>
   <a class="navbar-brand" [routerLink]="['/']">PonyRacer</a>
   <div id="navbar" class="navbar-collapse" [ngClass]="navbarCollapsed ? 'collapse' : ''">
-    <div class="nav navbar-nav mr-auto">
+    <div class="nav navbar-nav mr-auto" *ngIf="user">
       <a class="nav-item nav-link" [routerLink]="['/races']">Races</a>
     </div>
   </div>

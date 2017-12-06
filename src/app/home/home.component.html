@@ -3,7 +3,15 @@
 </div>
 
 <div class="text-center">
-  <a class="btn btn-primary" [routerLink]="['/login']">Login</a>
-  <a class="btn btn-primary" [routerLink]="['/register']">Register</a>
+  <ng-container *ngIf="user; else notLogged">
+    <a class="btn btn-primary" [routerLink]="['/races']">Races</a>
+  </ng-container>
+  <ng-template #notLogged>
+    <a class="btn btn-primary" [routerLink]="['/login']">Login</a>
+    <a class="btn btn-primary" [routerLink]="['/register']">Register</a>
+  </ng-template>
 </div>
+
+
+
 
