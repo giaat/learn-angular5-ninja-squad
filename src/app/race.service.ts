@@ -15,4 +15,12 @@ export class RaceService {
       params: { status: 'PENDING' },
     });
   }
+
+  bet(raceId, ponyId): Observable<RaceModel> {
+    return this.http.post<RaceModel>(`${this.baseUrl}/api/races/${raceId}/bets`, { ponyId });
+  }
+
+  get(id): Observable<RaceModel> {
+    return this.http.get<RaceModel>(`${this.baseUrl}/api/races/${id}`);
+  }
 }

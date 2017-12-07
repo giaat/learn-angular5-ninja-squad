@@ -17,6 +17,7 @@ import { RegisterComponent } from './register/register.component';
 import { UserService } from './user.service';
 import { JwtInterceptorService } from './jwt-interceptor.service';
 import { LoginComponent } from './login/login.component';
+import { BetComponent } from './bet/bet.component';
 
 @NgModule({
   declarations: [
@@ -29,6 +30,7 @@ import { LoginComponent } from './login/login.component';
     HomeComponent,
     RegisterComponent,
     LoginComponent,
+    BetComponent,
   ],
   imports: [
     BrowserModule,
