@@ -1,10 +1,14 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { RaceService } from '../race.service';
 import { ActivatedRoute } from '@angular/router';
+
 import { RaceModel } from '../models/race.model';
 import { PonyWithPositionModel } from '../models/pony.model';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
+import 'rxjs/add/operator/do';
+import 'rxjs/add/operator/filter';
+import 'rxjs/add/operator/switchMap';
 
 @Component({
   selector: 'pr-live',
@@ -13,20 +17,41 @@ import { Subscription } from 'rxjs/Subscription';
 })
 export class LiveComponent implements OnInit, OnDestroy {
   raceModel: RaceModel;
-  poniesWithPosition: Array<PonyWithPositionModel>;
+  poniesWithPosition: Array<PonyWithPositionModel> = [];
   positionSubscription: Subscription;
+  error = false;
+  winners: Array<PonyWithPositionModel>;
+  betWon: boolean;
 
   constructor(private raceService: RaceService, private route: ActivatedRoute) {}
 
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get('raceId');
-    this.raceService.get(id).subscribe(race => (this.raceModel = race));
     this.positionSubscription = this.raceService
-      .live(id)
-      .subscribe(positions => (this.poniesWithPosition = positions));
+      .get(id)
+      .do(race => (this.raceModel = race))
+      .filter(race => race.status !== 'FINISHED')
+      .switchMap(race => this.raceService.live(race.id))
+      .subscribe(
+        positions => {
+          this.poniesWithPosition = positions;
+          this.raceModel.status = 'RUNNING';
+        },
+        error => {
+          this.error = true;
+          console.error(error);
+        },
+        () => {
+          this.raceModel.status = 'FINISHED';
+          this.winners = this.poniesWithPosition.filter(pony => pony.position >= 100);
+          this.betWon = this.winners.some(pony => pony.id === this.raceModel.betPonyId);
+        }
+      );
   }
 
   ngOnDestroy() {
-    this.positionSubscription.unsubscribe();
+    if (this.positionSubscription) {
+      this.positionSubscription.unsubscribe();
+    }
   }
 }

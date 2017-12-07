@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/interval';
 import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/take';
+import 'rxjs/add/operator/takeWhile';
 import { HttpClient } from '@angular/common/http';
 
 import { RaceModel } from './models/race.model';
@@ -34,6 +34,9 @@ export class RaceService {
   }
 
   live(raceId): Observable<Array<PonyWithPositionModel>> {
-    return this.wsService.connect(`/race/${raceId}`).map(race => race.ponies);
+    return this.wsService
+      .connect(`/race/${raceId}`)
+      .takeWhile(liveRace => liveRace.status !== 'FINISHED')
+      .map(liveRace => liveRace.ponies);
   }
 }
