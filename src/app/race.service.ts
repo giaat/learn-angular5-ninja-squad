@@ -20,7 +20,11 @@ export class RaceService {
     return this.http.post<RaceModel>(`${this.baseUrl}/api/races/${raceId}/bets`, { ponyId });
   }
 
-  get(id): Observable<RaceModel> {
-    return this.http.get<RaceModel>(`${this.baseUrl}/api/races/${id}`);
+  get(raceId): Observable<RaceModel> {
+    return this.http.get<RaceModel>(`${this.baseUrl}/api/races/${raceId}`);
+  }
+
+  cancelBet(raceId): Observable<any> {
+    return this.http.delete(`${this.baseUrl}/api/races/${raceId}/bets`);
   }
 }
