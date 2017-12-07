@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import * as Webstomp from 'webstomp-client';
 
 import { ROUTES } from './app.routes';
 import { AppComponent } from './app.component';
@@ -19,6 +20,8 @@ import { JwtInterceptorService } from './jwt-interceptor.service';
 import { LoginComponent } from './login/login.component';
 import { BetComponent } from './bet/bet.component';
 import { LiveComponent } from './live/live.component';
+import { WEBSOCKET, WEBSTOMP } from './app.tokens';
+import { WsService } from './ws.service';
 
 @NgModule({
   declarations: [
@@ -46,6 +49,9 @@ import { LiveComponent } from './live/live.component';
     UserService,
     JwtInterceptorService,
     { provide: HTTP_INTERCEPTORS, useExisting: JwtInterceptorService, multi: true },
+    { provide: WEBSOCKET, useFactory: () => WebSocket },
+    { provide: WEBSTOMP, useFactory: () => Webstomp },
+    WsService,
   ],
   bootstrap: [AppComponent],
 })
