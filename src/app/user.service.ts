@@ -7,13 +7,18 @@ import { HttpClient } from '@angular/common/http';
 import { UserModel } from './models/user.model';
 import { environment } from '../environments/environment';
 import { JwtInterceptorService } from './jwt-interceptor.service';
+import { WsService } from './ws.service';
 
 @Injectable()
 export class UserService {
   baseUrl = environment.baseUrl;
   userEvents = new BehaviorSubject<UserModel>(undefined);
 
-  constructor(private http: HttpClient, private jwtInterceptorService: JwtInterceptorService) {
+  constructor(
+    private http: HttpClient,
+    private jwtInterceptorService: JwtInterceptorService,
+    private wsService: WsService
+  ) {
     this.retrieveUser();
   }
 
@@ -47,5 +52,9 @@ export class UserService {
     this.userEvents.next(null);
     localStorage.removeItem('rememberMe');
     this.jwtInterceptorService.removeJwtToken();
+  }
+
+  scoreUpdates(userId): Observable<UserModel> {
+    return this.wsService.connect(`/player/${userId}`);
   }
 }

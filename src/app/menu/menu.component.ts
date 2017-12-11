@@ -1,5 +1,9 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/operator/switchMap';
+import 'rxjs/add/operator/concat';
+import 'rxjs/add/observable/of';
 import { Router } from '@angular/router';
 
 import { UserService } from '../user.service';
@@ -18,7 +22,16 @@ export class MenuComponent implements OnInit, OnDestroy {
   constructor(private userService: UserService, private router: Router) {}
 
   ngOnInit() {
-    this.userEventsSubscription = this.userService.userEvents.subscribe(user => (this.user = user));
+    this.userEventsSubscription = this.userService.userEvents
+      .switchMap(
+        user =>
+          user
+            ? Observable.of(user).concat(
+                this.userService.scoreUpdates(user.id).catch(() => Observable.empty())
+              )
+            : Observable.of(null)
+      )
+      .subscribe(userScore => (this.user = userScore));
   }
 
   ngOnDestroy() {
