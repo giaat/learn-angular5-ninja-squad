@@ -7,6 +7,7 @@ import { LoginComponent } from './login/login.component';
 import { BetComponent } from './bet/bet.component';
 import { RaceComponent } from './race/race.component';
 import { LiveComponent } from './live/live.component';
+import { LoggedInGuard } from './logged-in.guard';
 
 export const ROUTES: Routes = [
   { path: '', component: HomeComponent },
@@ -14,6 +15,7 @@ export const ROUTES: Routes = [
   { path: 'login', component: LoginComponent },
   {
     path: 'races',
+    canActivate: [LoggedInGuard],
     children: [
       { path: '', component: RacesComponent },
       { path: ':raceId', component: BetComponent },

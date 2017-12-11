@@ -22,6 +22,7 @@ import { BetComponent } from './bet/bet.component';
 import { LiveComponent } from './live/live.component';
 import { WEBSOCKET, WEBSTOMP } from './app.tokens';
 import { WsService } from './ws.service';
+import { LoggedInGuard } from './logged-in.guard';
 
 @NgModule({
   declarations: [
@@ -52,6 +53,7 @@ import { WsService } from './ws.service';
     { provide: WEBSOCKET, useFactory: () => WebSocket },
     { provide: WEBSTOMP, useFactory: () => Webstomp },
     WsService,
+    LoggedInGuard,
   ],
   bootstrap: [AppComponent],
 })
