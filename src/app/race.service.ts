@@ -15,9 +15,9 @@ export class RaceService {
   baseUrl = environment.baseUrl;
   constructor(private http: HttpClient, private wsService: WsService) {}
 
-  list(): Observable<Array<RaceModel>> {
+  list(status: string): Observable<Array<RaceModel>> {
     return this.http.get<Array<RaceModel>>(`${this.baseUrl}/api/races`, {
-      params: { status: 'PENDING' },
+      params: { status },
     });
   }
 

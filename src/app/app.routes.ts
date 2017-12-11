@@ -8,6 +8,10 @@ import { BetComponent } from './bet/bet.component';
 import { RaceComponent } from './race/race.component';
 import { LiveComponent } from './live/live.component';
 import { LoggedInGuard } from './logged-in.guard';
+import { RacesResolverService } from './races-resolver.service';
+import { RaceResolverService } from './race-resolver.service';
+import { PendingRacesComponent } from './races/pending-races/pending-races.component';
+import { FinishedRacesComponent } from './races/finished-races/finished-races.component';
 
 export const ROUTES: Routes = [
   { path: '', component: HomeComponent },
@@ -17,9 +21,41 @@ export const ROUTES: Routes = [
     path: 'races',
     canActivate: [LoggedInGuard],
     children: [
-      { path: '', component: RacesComponent },
-      { path: ':raceId', component: BetComponent },
-      { path: ':raceId/live', component: LiveComponent },
+      {
+        path: '',
+        component: RacesComponent,
+        children: [
+          { path: '', pathMatch: 'full', redirectTo: 'pending' },
+          {
+            path: 'pending',
+            component: PendingRacesComponent,
+            resolve: {
+              races: RacesResolverService,
+            },
+          },
+          {
+            path: 'finished',
+            component: FinishedRacesComponent,
+            resolve: {
+              races: RacesResolverService,
+            },
+          },
+        ],
+      },
+      {
+        path: ':raceId',
+        component: BetComponent,
+        resolve: {
+          races: RaceResolverService,
+        },
+      },
+      {
+        path: ':raceId/live',
+        component: LiveComponent,
+        resolve: {
+          races: RaceResolverService,
+        },
+      },
     ],
   },
 ];

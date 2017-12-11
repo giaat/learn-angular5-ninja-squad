@@ -23,6 +23,10 @@ import { LiveComponent } from './live/live.component';
 import { WEBSOCKET, WEBSTOMP } from './app.tokens';
 import { WsService } from './ws.service';
 import { LoggedInGuard } from './logged-in.guard';
+import { PendingRacesComponent } from './races/pending-races/pending-races.component';
+import { FinishedRacesComponent } from './races/finished-races/finished-races.component';
+import { RacesResolverService } from './races-resolver.service';
+import { RaceResolverService } from './race-resolver.service';
 
 @NgModule({
   declarations: [
@@ -37,6 +41,8 @@ import { LoggedInGuard } from './logged-in.guard';
     LoginComponent,
     BetComponent,
     LiveComponent,
+    PendingRacesComponent,
+    FinishedRacesComponent,
   ],
   imports: [
     BrowserModule,
@@ -54,6 +60,8 @@ import { LoggedInGuard } from './logged-in.guard';
     { provide: WEBSTOMP, useFactory: () => Webstomp },
     WsService,
     LoggedInGuard,
+    RacesResolverService,
+    RaceResolverService,
   ],
   bootstrap: [AppComponent],
 })

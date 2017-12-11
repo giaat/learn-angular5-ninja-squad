@@ -1,6 +1,6 @@
 import { async, discardPeriodicTasks, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
-import { ActivatedRoute, convertToParamMap } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { By } from '@angular/platform-browser';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
@@ -16,7 +16,7 @@ import { PonyComponent } from '../pony/pony.component';
 
 describe('LiveComponent', () => {
 
-  const fakeRaceService = jasmine.createSpyObj('RaceService', ['get', 'live', 'boost']);
+  const fakeRaceService = jasmine.createSpyObj('RaceService', ['live', 'boost']);
 
   beforeEach(() => TestBed.configureTestingModule({
     imports: [AppModule, RouterTestingModule],
@@ -26,14 +26,12 @@ describe('LiveComponent', () => {
   }));
 
   beforeEach(() => {
-    fakeRaceService.get.calls.reset();
     fakeRaceService.live.calls.reset();
     fakeRaceService.boost.calls.reset();
   });
 
   it('should initialize the array of positions with an empty array', () => {
     const fakeActivatedRoute = TestBed.get(ActivatedRoute);
-    fakeActivatedRoute.snapshot = { paramMap: convertToParamMap({ raceId: 1 }) };
     const race = {
       id: 1,
       name: 'Lyon',
@@ -41,7 +39,7 @@ describe('LiveComponent', () => {
       ponies: [],
       startInstant: '2016-02-18T08:02:00Z'
     } as RaceModel;
-    fakeRaceService.get.and.returnValue(Observable.of(race));
+    fakeActivatedRoute.snapshot = { data: { race } };
     fakeRaceService.live.and.returnValue(Observable.of([]));
 
     const liveComponent = new LiveComponent(fakeRaceService, fakeActivatedRoute);
@@ -50,7 +48,6 @@ describe('LiveComponent', () => {
 
   it('should subscribe to the live observable if the race is PENDING', async(() => {
     const fakeActivatedRoute = TestBed.get(ActivatedRoute);
-    fakeActivatedRoute.snapshot = { paramMap: convertToParamMap({ raceId: 1 }) };
     const race = {
       id: 1,
       name: 'Lyon',
@@ -58,13 +55,12 @@ describe('LiveComponent', () => {
       ponies: [],
       startInstant: '2016-02-18T08:02:00Z'
     } as RaceModel;
-    fakeRaceService.get.and.returnValue(Observable.of(race));
+    fakeActivatedRoute.snapshot = { data: { race } };
     fakeRaceService.live.and.returnValue(Observable.empty());
 
     const liveComponent = new LiveComponent(fakeRaceService, fakeActivatedRoute);
     liveComponent.ngOnInit();
 
-    expect(fakeRaceService.get).toHaveBeenCalledWith(1);
     expect(liveComponent.raceModel).toBe(race);
     expect(fakeRaceService.live).toHaveBeenCalledWith(1);
     expect(liveComponent.positionSubscription).not.toBeNull('positionSubscription should store the subscription');
@@ -72,7 +68,6 @@ describe('LiveComponent', () => {
 
   it('should subscribe to the live observable if the race is RUNNING', async(() => {
     const fakeActivatedRoute = TestBed.get(ActivatedRoute);
-    fakeActivatedRoute.snapshot = { paramMap: convertToParamMap({ raceId: 1 }) };
     const race = {
       id: 1,
       name: 'Lyon',
@@ -80,7 +75,7 @@ describe('LiveComponent', () => {
       ponies: [],
       startInstant: '2016-02-18T08:02:00Z'
     } as RaceModel;
-    fakeRaceService.get.and.returnValue(Observable.of(race));
+    fakeActivatedRoute.snapshot = { data: { race } };
     fakeRaceService.live.and.returnValue(Observable.of([
       { id: 1, name: 'Sunny Sunday', color: 'BLUE', position: 0 }
     ]));
@@ -88,7 +83,6 @@ describe('LiveComponent', () => {
     const liveComponent = new LiveComponent(fakeRaceService, fakeActivatedRoute);
     liveComponent.ngOnInit();
 
-    expect(fakeRaceService.get).toHaveBeenCalledWith(1);
     expect(liveComponent.raceModel).toBe(race);
     expect(fakeRaceService.live).toHaveBeenCalledWith(1);
     expect(liveComponent.positionSubscription).not.toBeNull('positionSubscription should store the subscription');
@@ -97,7 +91,6 @@ describe('LiveComponent', () => {
 
   it('should not subscribe to the live observable if the race is FINISHED', async(() => {
     const fakeActivatedRoute = TestBed.get(ActivatedRoute);
-    fakeActivatedRoute.snapshot = { paramMap: convertToParamMap({ raceId: 1 }) };
     const race = {
       id: 1,
       name: 'Lyon',
@@ -105,13 +98,12 @@ describe('LiveComponent', () => {
       ponies: [],
       startInstant: '2016-02-18T08:02:00Z'
     } as RaceModel;
-    fakeRaceService.get.and.returnValue(Observable.of(race));
+    fakeActivatedRoute.snapshot = { data: { race } };
     fakeRaceService.live.and.returnValue(Observable.empty());
 
     const liveComponent = new LiveComponent(fakeRaceService, fakeActivatedRoute);
     liveComponent.ngOnInit();
 
-    expect(fakeRaceService.get).toHaveBeenCalledWith(1);
     expect(liveComponent.raceModel).toBe(race);
     expect(fakeRaceService.live).not.toHaveBeenCalledWith(1);
     expect(liveComponent.positionSubscription).not.toBeNull('positionSubscription should store the subscription');
@@ -119,7 +111,6 @@ describe('LiveComponent', () => {
 
   it('should change the race status once the race is RUNNING', async(() => {
     const fakeActivatedRoute = TestBed.get(ActivatedRoute);
-    fakeActivatedRoute.snapshot = { paramMap: convertToParamMap({ raceId: 1 }) };
     const race = {
       id: 1,
       name: 'Lyon',
@@ -127,7 +118,7 @@ describe('LiveComponent', () => {
       ponies: [],
       startInstant: '2016-02-18T08:02:00Z'
     } as RaceModel;
-    fakeRaceService.get.and.returnValue(Observable.of(race));
+    fakeActivatedRoute.snapshot = { data: { race } };
     const positions = new Subject<Array<PonyWithPositionModel>>();
     fakeRaceService.live.and.returnValue(positions);
 
@@ -143,7 +134,6 @@ describe('LiveComponent', () => {
 
   it('should switch the error flag if an error occurs', async(() => {
     const fakeActivatedRoute = TestBed.get(ActivatedRoute);
-    fakeActivatedRoute.snapshot = { paramMap: convertToParamMap({ raceId: 1 }) };
     const race = {
       id: 1,
       name: 'Lyon',
@@ -151,7 +141,7 @@ describe('LiveComponent', () => {
       ponies: [],
       startInstant: '2016-02-18T08:02:00Z'
     } as RaceModel;
-    fakeRaceService.get.and.returnValue(Observable.of(race));
+    fakeActivatedRoute.snapshot = { data: { race } };
     const positions = new Subject<Array<PonyWithPositionModel>>();
     fakeRaceService.live.and.returnValue(positions);
 
@@ -164,7 +154,6 @@ describe('LiveComponent', () => {
 
   it('should unsubscribe on destruction', async(() => {
     const fakeActivatedRoute = TestBed.get(ActivatedRoute);
-    fakeActivatedRoute.snapshot = { paramMap: convertToParamMap({ raceId: 1 }) };
     const race = {
       id: 1,
       name: 'Lyon',
@@ -172,7 +161,7 @@ describe('LiveComponent', () => {
       ponies: [],
       startInstant: '2016-02-18T08:02:00Z'
     } as RaceModel;
-    fakeRaceService.get.and.returnValue(Observable.of(race));
+    fakeActivatedRoute.snapshot = { data: { race } };
     const positions = new Subject<Array<PonyWithPositionModel>>();
     fakeRaceService.live.and.returnValue(positions);
 
@@ -188,7 +177,6 @@ describe('LiveComponent', () => {
 
   it('should tidy things up when the race is over', async(() => {
     const fakeActivatedRoute = TestBed.get(ActivatedRoute);
-    fakeActivatedRoute.snapshot = { paramMap: convertToParamMap({ raceId: 1 }) };
     const race = {
       id: 1,
       name: 'Lyon',
@@ -197,7 +185,7 @@ describe('LiveComponent', () => {
       startInstant: '2016-02-18T08:02:00Z',
       betPonyId: 1
     } as RaceModel;
-    fakeRaceService.get.and.returnValue(Observable.of(race));
+    fakeActivatedRoute.snapshot = { data: { race } };
     const positions = new Subject<Array<PonyWithPositionModel>>();
     fakeRaceService.live.and.returnValue(positions);
 
@@ -210,7 +198,7 @@ describe('LiveComponent', () => {
       { id: 3, name: 'Awesome Fridge', color: 'YELLOW', position: 97 }
     ]);
     expect(liveComponent.poniesWithPosition.length).toBe(3, 'poniesWithPositions should store the positions');
-    expect(liveComponent.winners).toBeUndefined('The winners should be undefined until the race is over');
+    expect(liveComponent.winners).toEqual([], 'The winners should be empty until the race is over');
     expect(liveComponent.betWon).toBeUndefined('The bet status should be undefined until the race is over');
 
     positions.complete();
@@ -224,7 +212,6 @@ describe('LiveComponent', () => {
 
   it('should display the pending race', () => {
     const fakeActivatedRoute = TestBed.get(ActivatedRoute);
-    fakeActivatedRoute.snapshot = { paramMap: convertToParamMap({ raceId: 1 }) };
     const race = {
       id: 1,
       name: 'Lyon',
@@ -236,7 +223,7 @@ describe('LiveComponent', () => {
       ],
       startInstant: '2016-02-18T08:02:00Z'
     } as RaceModel;
-    fakeRaceService.get.and.returnValue(Observable.of(race));
+    fakeActivatedRoute.snapshot = { data: { race } };
     const positions = new Subject<Array<PonyWithPositionModel>>();
     fakeRaceService.live.and.returnValue(positions);
 
@@ -261,7 +248,6 @@ describe('LiveComponent', () => {
 
   it('should display the running race', () => {
     const fakeActivatedRoute = TestBed.get(ActivatedRoute);
-    fakeActivatedRoute.snapshot = { paramMap: convertToParamMap({ raceId: 1 }) };
     const race = {
       id: 1,
       name: 'Lyon',
@@ -273,7 +259,7 @@ describe('LiveComponent', () => {
       ],
       startInstant: '2016-02-18T08:02:00Z'
     } as RaceModel;
-    fakeRaceService.get.and.returnValue(Observable.of(race));
+    fakeActivatedRoute.snapshot = { data: { race } };
     const positions = new Subject<Array<PonyWithPositionModel>>();
     fakeRaceService.live.and.returnValue(positions);
 
@@ -303,7 +289,6 @@ describe('LiveComponent', () => {
 
   it('should display the finished race', () => {
     const fakeActivatedRoute = TestBed.get(ActivatedRoute);
-    fakeActivatedRoute.snapshot = { paramMap: convertToParamMap({ raceId: 1 }) };
     const race = {
       id: 1,
       name: 'Lyon',
@@ -316,7 +301,7 @@ describe('LiveComponent', () => {
       startInstant: '2016-02-18T08:02:00Z',
       betPonyId: 1
     } as RaceModel;
-    fakeRaceService.get.and.returnValue(Observable.of(race));
+    fakeActivatedRoute.snapshot = { data: { race } };
     const positions = new Subject<Array<PonyWithPositionModel>>();
     fakeRaceService.live.and.returnValue(positions);
 
@@ -366,7 +351,6 @@ describe('LiveComponent', () => {
 
   it('should listen to click events on ponies in the template', () => {
     const fakeActivatedRoute = TestBed.get(ActivatedRoute);
-    fakeActivatedRoute.snapshot = { paramMap: convertToParamMap({ raceId: 1 }) };
     const race = {
       id: 1,
       name: 'Lyon',
@@ -379,7 +363,7 @@ describe('LiveComponent', () => {
       startInstant: '2016-02-18T08:02:00Z',
       betPonyId: 1
     } as RaceModel;
-    fakeRaceService.get.and.returnValue(Observable.of(race));
+    fakeActivatedRoute.snapshot = { data: { race } };
     const positions = new Subject<Array<PonyWithPositionModel>>();
     fakeRaceService.live.and.returnValue(positions);
 
@@ -408,7 +392,6 @@ describe('LiveComponent', () => {
 
   it('should emit an event with the pony when a pony is clicked', () => {
     const fakeActivatedRoute = TestBed.get(ActivatedRoute);
-    fakeActivatedRoute.snapshot = { paramMap: convertToParamMap({ raceId: 1 }) };
     const race = {
       id: 1,
       name: 'Lyon',
@@ -417,7 +400,7 @@ describe('LiveComponent', () => {
       startInstant: '2016-02-18T08:02:00Z',
       betPonyId: 1
     } as RaceModel;
-    fakeRaceService.get.and.returnValue(Observable.of(race));
+    fakeActivatedRoute.snapshot = { data: { race } };
 
     const liveComponent = new LiveComponent(fakeRaceService, fakeActivatedRoute);
     liveComponent.ngOnInit();
@@ -435,7 +418,6 @@ describe('LiveComponent', () => {
 
   it('should buffer clicks over a second and call the boost method', fakeAsync(() => {
     const fakeActivatedRoute = TestBed.get(ActivatedRoute);
-    fakeActivatedRoute.snapshot = { paramMap: convertToParamMap({ raceId: 1 }) };
     const race = {
       id: 1,
       name: 'Lyon',
@@ -444,7 +426,7 @@ describe('LiveComponent', () => {
       startInstant: '2016-02-18T08:02:00Z',
       betPonyId: 1
     } as RaceModel;
-    fakeRaceService.get.and.returnValue(Observable.of(race));
+    fakeActivatedRoute.snapshot = { data: { race } };
     fakeRaceService.boost.and.returnValue(Observable.of(race));
 
     const liveComponent = new LiveComponent(fakeRaceService, fakeActivatedRoute);
@@ -480,7 +462,6 @@ describe('LiveComponent', () => {
 
   it('should filter click buffer that are not at least 5', fakeAsync(() => {
     const fakeActivatedRoute = TestBed.get(ActivatedRoute);
-    fakeActivatedRoute.snapshot = { paramMap: convertToParamMap({ raceId: 1 }) };
     const race = {
       id: 1,
       name: 'Lyon',
@@ -489,7 +470,7 @@ describe('LiveComponent', () => {
       startInstant: '2016-02-18T08:02:00Z',
       betPonyId: 1
     } as RaceModel;
-    fakeRaceService.get.and.returnValue(Observable.of(race));
+    fakeActivatedRoute.snapshot = { data: { race } };
     fakeRaceService.boost.and.returnValue(Observable.of(race));
 
     const liveComponent = new LiveComponent(fakeRaceService, fakeActivatedRoute);
@@ -523,7 +504,6 @@ describe('LiveComponent', () => {
 
   it('should throttle repeated boosts', fakeAsync(() => {
     const fakeActivatedRoute = TestBed.get(ActivatedRoute);
-    fakeActivatedRoute.snapshot = { paramMap: convertToParamMap({ raceId: 1 }) };
     const race = {
       id: 1,
       name: 'Lyon',
@@ -532,7 +512,7 @@ describe('LiveComponent', () => {
       startInstant: '2016-02-18T08:02:00Z',
       betPonyId: 1
     } as RaceModel;
-    fakeRaceService.get.and.returnValue(Observable.of(race));
+    fakeActivatedRoute.snapshot = { data: { race } };
     fakeRaceService.boost.and.returnValue(Observable.of(race));
 
     const liveComponent = new LiveComponent(fakeRaceService, fakeActivatedRoute);
@@ -574,7 +554,6 @@ describe('LiveComponent', () => {
 
   it('should catch a boost error', fakeAsync(() => {
     const fakeActivatedRoute = TestBed.get(ActivatedRoute);
-    fakeActivatedRoute.snapshot = { paramMap: convertToParamMap({ raceId: 1 }) };
     const race = {
       id: 1,
       name: 'Lyon',
@@ -583,7 +562,7 @@ describe('LiveComponent', () => {
       startInstant: '2016-02-18T08:02:00Z',
       betPonyId: 1
     } as RaceModel;
-    fakeRaceService.get.and.returnValue(Observable.of(race));
+    fakeActivatedRoute.snapshot = { data: { race } };
     const boost = new Subject<RaceModel>();
     fakeRaceService.boost.and.returnValue(boost);
 
@@ -621,7 +600,6 @@ describe('LiveComponent', () => {
 
   it('should use a trackBy method', () => {
     const fakeActivatedRoute = TestBed.get(ActivatedRoute);
-    fakeActivatedRoute.snapshot = { paramMap: convertToParamMap({ raceId: 1 }) };
     const race = {
       id: 1,
       name: 'Lyon',
@@ -630,7 +608,7 @@ describe('LiveComponent', () => {
       startInstant: '2016-02-18T08:02:00Z',
       betPonyId: 1
     } as RaceModel;
-    fakeRaceService.get.and.returnValue(Observable.of(race));
+    fakeActivatedRoute.snapshot = { data: { race } };
     const positions = new Subject<Array<PonyWithPositionModel>>();
     fakeRaceService.live.and.returnValue(positions);
     fakeRaceService.boost.and.returnValue(Observable.of(race));
