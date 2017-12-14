@@ -7,7 +7,7 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/throw';
 import 'rxjs/add/observable/of';
 
-import { AppModule } from '../app.module';
+import { UsersModule } from '../users/users.module';
 import { RegisterComponent } from './register.component';
 import { UserService } from '../user.service';
 
@@ -17,7 +17,7 @@ describe('RegisterComponent', () => {
   const fakeRouter = jasmine.createSpyObj('Router', ['navigate']);
 
   beforeEach(() => TestBed.configureTestingModule({
-    imports: [AppModule, RouterTestingModule],
+    imports: [UsersModule, RouterTestingModule],
     providers: [
       { provide: UserService, useValue: fakeUserService },
       { provide: Router, useValue: fakeRouter }

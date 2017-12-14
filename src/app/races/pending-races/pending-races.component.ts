@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
 import { RaceModel } from '../../models/race.model';
-import { RaceService } from '../../race.service';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
@@ -9,11 +8,10 @@ import { ActivatedRoute } from '@angular/router';
   templateUrl: './pending-races.component.html',
   styleUrls: ['./pending-races.component.css'],
 })
-export class PendingRacesComponent implements OnInit {
+export class PendingRacesComponent {
   races: Array<RaceModel> = [];
-  constructor(private raceService: RaceService, private route: ActivatedRoute) {}
 
-  ngOnInit() {
-    this.route.data.subscribe(data => (this.races = data['races']));
+  constructor(private route: ActivatedRoute) {
+    this.races = route.snapshot.data['races'];
   }
 }

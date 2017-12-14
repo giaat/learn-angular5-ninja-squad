@@ -1,6 +1,6 @@
 <div style="margin-top: 100px">
   <h2>{{ raceModel.name }}</h2>
-  <p>{{ raceModel.startInstant | fromNow}}</p>
+  <p>{{ raceModel.startInstant | fromNow }}</p>
     <div class="row">
       <div class="col-12 col-md-2" *ngFor="let pony of raceModel.ponies" [ngClass]="{'selected': isPonySelected(pony)}">
         <pr-pony [ponyModel]="pony" (ponyClicked)="betOnPony(pony)"></pr-pony>
