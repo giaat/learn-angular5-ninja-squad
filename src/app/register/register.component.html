@@ -1,9 +1,9 @@
 <h2 class="text-center">Sign up</h2>
 <form (ngSubmit)="register()" [formGroup]="userForm">
 
-    <pr-alert id="registration-error" type="danger" *ngIf="registrationFailed" (close)="registrationFailed = false">
+    <ngb-alert id="registration-error" type="danger" *ngIf="registrationFailed" (close)="registrationFailed = false">
       Try again with another login.
-    </pr-alert>
+    </ngb-alert>
 
     <div class="form-group">
       <label for="login" id="login-label" class="form-control-label">Login</label>

@@ -1,22 +1,22 @@
 <div style="margin-top:100px">
   <h2>{{ raceModel.name }}</h2>
 
-  <pr-alert type="danger" *ngIf="error">
+  <ngb-alert type="danger" *ngIf="error">
     A problem occurred during the live.
-  </pr-alert>
+  </ngb-alert>
 
   <div id="live-race" [ngSwitch]="raceModel.status">
       <div *ngSwitchCase="'FINISHED'">
           <div *ngIf="!winners.length; else displayWinners">The race is over.</div>
           <ng-template #displayWinners>
 
-            <pr-alert type="success" *ngIf="betWon">
+            <ngb-alert type="success" *ngIf="betWon">
               You won your bet!
-            </pr-alert>
+            </ngb-alert>
 
-            <pr-alert type="warning" *ngIf="raceModel.betPonyId && !betWon">
+            <ngb-alert type="warning" *ngIf="raceModel.betPonyId && !betWon">
               You lost your bet.
-            </pr-alert>
+            </ngb-alert>
 
             <div>Most Valuable Ponies</div>
             <div class="row">

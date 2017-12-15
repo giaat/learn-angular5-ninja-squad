@@ -2,6 +2,7 @@ import { async, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { By } from '@angular/platform-browser';
+import { NgbAlert, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/observable/throw';
@@ -12,7 +13,6 @@ import { BetComponent } from './bet.component';
 import { PonyComponent } from '../pony/pony.component';
 import { RaceModel } from '../models/race.model';
 import { PonyModel } from '../models/pony.model';
-import { AlertComponent } from '../shared/alert/alert.component';
 
 describe('BetComponent', () => {
   const fakeRaceService = jasmine.createSpyObj('RaceService', ['bet', 'cancelBet']);
@@ -20,7 +20,7 @@ describe('BetComponent', () => {
   const fakeActivatedRoute = { snapshot: { data: { race } } };
 
   beforeEach(() => TestBed.configureTestingModule({
-    imports: [RacesModule, RouterTestingModule],
+    imports: [RacesModule, RouterTestingModule, NgbModule.forRoot()],
     providers: [
       { provide: RaceService, useValue: fakeRaceService },
       { provide: ActivatedRoute, useValue: fakeActivatedRoute }
@@ -149,15 +149,15 @@ describe('BetComponent', () => {
     fixture.detectChanges();
 
     const debugElement = fixture.debugElement;
-    const message = debugElement.query(By.directive(AlertComponent));
-    expect(message).not.toBeNull('You should have an AlertComponent if the bet failed');
+    const message = debugElement.query(By.directive(NgbAlert));
+    expect(message).not.toBeNull('You should have an NgbAlert if the bet failed');
     expect(message.nativeElement.textContent).toContain('The race is already started or finished');
     expect(message.componentInstance.type).toBe('danger', 'The alert should be a danger one');
 
     // close the alert
     message.componentInstance.closeHandler();
     fixture.detectChanges();
-    expect(debugElement.query(By.directive(AlertComponent))).toBeNull('The AlertComponent should be closable');
+    expect(debugElement.query(By.directive(NgbAlert))).toBeNull('The NgbAlert should be closable');
   });
 
   it('should cancel a bet', () => {

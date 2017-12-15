@@ -54,7 +54,7 @@ export class UserService {
     this.jwtInterceptorService.removeJwtToken();
   }
 
-  scoreUpdates(userId): Observable<UserModel> {
+  scoreUpdates(userId: number): Observable<UserModel> {
     return this.wsService.connect(`/player/${userId}`);
   }
 

@@ -1,13 +1,15 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/observable/of';
+import 'rxjs/add/observable/empty';
 import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/concat';
-import 'rxjs/add/observable/of';
-import { Router } from '@angular/router';
+import 'rxjs/add/operator/catch';
 
-import { UserService } from '../user.service';
 import { UserModel } from '../models/user.model';
+import { UserService } from '../user.service';
 
 @Component({
   selector: 'pr-menu',
@@ -16,6 +18,7 @@ import { UserModel } from '../models/user.model';
 })
 export class MenuComponent implements OnInit, OnDestroy {
   navbarCollapsed = true;
+
   user: UserModel;
   userEventsSubscription: Subscription;
 
@@ -40,13 +43,13 @@ export class MenuComponent implements OnInit, OnDestroy {
     }
   }
 
+  toggleNavbar() {
+    this.navbarCollapsed = !this.navbarCollapsed;
+  }
+
   logout(event) {
     event.preventDefault();
     this.userService.logout();
     this.router.navigate(['/']);
-  }
-
-  toggleNavbar() {
-    this.navbarCollapsed = !this.navbarCollapsed;
   }
 }

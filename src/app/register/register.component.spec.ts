@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { FormControl, FormGroup } from '@angular/forms';
 import { By } from '@angular/platform-browser';
+import { NgbAlert, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/throw';
 import 'rxjs/add/observable/of';
@@ -10,7 +11,6 @@ import 'rxjs/add/observable/of';
 import { UsersModule } from '../users/users.module';
 import { RegisterComponent } from './register.component';
 import { UserService } from '../user.service';
-import { AlertComponent } from '../shared/alert/alert.component';
 
 describe('RegisterComponent', () => {
 
@@ -18,7 +18,7 @@ describe('RegisterComponent', () => {
   const fakeRouter = jasmine.createSpyObj('Router', ['navigate']);
 
   beforeEach(() => TestBed.configureTestingModule({
-    imports: [UsersModule, RouterTestingModule],
+    imports: [UsersModule, RouterTestingModule, NgbModule.forRoot()],
     providers: [
       { provide: UserService, useValue: fakeUserService },
       { provide: Router, useValue: fakeRouter }
@@ -287,9 +287,8 @@ describe('RegisterComponent', () => {
     expect(fakeRouter.navigate).not.toHaveBeenCalled();
     expect(component.registrationFailed).toBe(true, 'You should set a field `registrationFailed` to `true` if the registration fails');
     // and display the error message
-    const errorMessage = fixture.debugElement.query(By.directive(AlertComponent));
-    expect(errorMessage)
-      .not.toBeNull('You should display an error message in an AlertComponent if the registration fails');
+    const errorMessage = fixture.debugElement.query(By.directive(NgbAlert));
+    expect(errorMessage).not.toBeNull('You should display an error message in an NgbAlert if the registration fails');
     expect(errorMessage.nativeElement.textContent).toContain('Try again with another login.');
     expect(errorMessage.componentInstance.type).toBe('danger', 'The alert should be a danger one');
   });

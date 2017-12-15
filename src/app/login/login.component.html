@@ -2,9 +2,9 @@
 
 <form (ngSubmit)="authenticate()" #userForm="ngForm">
 
-  <pr-alert id="authentication-error" type="danger" *ngIf="authenticationFailed" (close)="authenticationFailed = false">
+  <ngb-alert id="authentication-error" type="danger" *ngIf="authenticationFailed" (close)="authenticationFailed = false">
       Nope, try again
-  </pr-alert>
+  </ngb-alert>
 
   <div class="form-group">
     <label for="login" id="login-label" class="form-control-label">Login</label>

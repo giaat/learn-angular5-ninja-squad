@@ -2,6 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { RouterModule, PreloadAllModules } from '@angular/router';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import * as Webstomp from 'webstomp-client';
 
 import { ROUTES } from './app.routes';
@@ -22,6 +23,7 @@ import { WsService } from './ws.service';
     BrowserModule,
     HttpClientModule,
     RouterModule.forRoot(ROUTES, { preloadingStrategy: PreloadAllModules }),
+    NgbModule.forRoot(),
   ],
   providers: [
     UserService,

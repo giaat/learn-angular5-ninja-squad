@@ -10,6 +10,7 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class FinishedRacesComponent implements OnInit {
   races: Array<RaceModel> = [];
+  page = 1;
   constructor(private route: ActivatedRoute) {}
 
   ngOnInit() {
