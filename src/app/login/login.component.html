@@ -2,26 +2,26 @@
 
 <form (ngSubmit)="authenticate()" #userForm="ngForm">
 
+  <pr-alert id="authentication-error" type="danger" *ngIf="authenticationFailed" (close)="authenticationFailed = false">
+      Nope, try again
+  </pr-alert>
+
   <div class="form-group">
-    <label for="login" id="login-label">Login</label>
+    <label for="login" id="login-label" class="form-control-label">Login</label>
     <input id="login" name="login" class="form-control" type="text" [(ngModel)]="credentials.login" #login=
     "ngModel" required>
-    <div class="alert alert-danger" *ngIf="login.dirty && login.hasError('required')">
+    <div class="form-control-feedback" *ngIf="login.dirty && login.hasError('required')">
       Login is required
     </div>
   </div>
 
   <div class="form-group">
-    <label for="password" id="password-label">Password</label>
+    <label for="password" id="password-label" class="form-control-label">Password</label>
     <input id="password" name="password"  class="form-control" type="password" [(ngModel)]="credentials.password" #password=
     "ngModel" required>
-    <div class="alert alert-danger" *ngIf="password.dirty && password.hasError('required')">
+    <div class="form-control-feedback" *ngIf="password.dirty && password.hasError('required')">
       Password is required
     </div>
-  </div>
-
-  <div id="authentication-error" class="alert alert-danger" *ngIf="authenticationFailed">
-    Nope, try again
   </div>
 
   <button class="btn btn-success" type="submit" [disabled]="userForm.invalid">Login</button>

@@ -9,7 +9,7 @@
     <a href="" [routerLink]="['/races', raceModel.id, 'live']">
       Watch live!
     </a>
-    <div class="alert alert-danger" *ngIf="betFailed">
+    <pr-alert type="danger" *ngIf="betFailed" (close)="betFailed = false">
       The race is already started or finished
-    </div>
+    </pr-alert>
 </div>

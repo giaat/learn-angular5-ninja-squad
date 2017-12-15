@@ -14,9 +14,10 @@ import { FromNowPipe } from '../from-now.pipe';
 import { RaceService } from '../race.service';
 import { RacesResolverService } from '../races-resolver.service';
 import { RaceResolverService } from '../race-resolver.service';
+import { SharedModule } from '../shared/shared.module';
 
 @NgModule({
-  imports: [CommonModule, RouterModule.forChild(RACES_ROUTES)],
+  imports: [CommonModule, RouterModule.forChild(RACES_ROUTES), SharedModule],
   declarations: [
     BetComponent,
     LiveComponent,
