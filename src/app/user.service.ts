@@ -5,6 +5,7 @@ import 'rxjs/add/operator/do';
 import { HttpClient } from '@angular/common/http';
 
 import { UserModel } from './models/user.model';
+import { MoneyHistoryModel } from './models/money-history.model';
 import { environment } from '../environments/environment';
 import { JwtInterceptorService } from './jwt-interceptor.service';
 import { WsService } from './ws.service';
@@ -64,5 +65,8 @@ export class UserService {
       return true;
     }
     return false;
+  }
+  getMoneyHistory(): Observable<Array<MoneyHistoryModel>> {
+    return this.http.get<Array<MoneyHistoryModel>>(`${this.baseUrl}/api/money/history`);
   }
 }

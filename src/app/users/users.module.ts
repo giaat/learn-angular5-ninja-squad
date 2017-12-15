@@ -7,6 +7,7 @@ import { RegisterComponent } from '../register/register.component';
 import { LoginComponent } from '../login/login.component';
 import { USERS_ROUTES } from './users.routes';
 import { SharedModule } from '../shared/shared.module';
+import { MoneyHistoryComponent } from './money-history/money-history.component';
 
 @NgModule({
   imports: [
@@ -16,6 +17,6 @@ import { SharedModule } from '../shared/shared.module';
     SharedModule,
     RouterModule.forChild(USERS_ROUTES),
   ],
-  declarations: [RegisterComponent, LoginComponent],
+  declarations: [RegisterComponent, LoginComponent, MoneyHistoryComponent],
 })
 export class UsersModule {}
