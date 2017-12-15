@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
 import { RaceModel } from '../../models/race.model';
-import { RaceService } from '../../race.service';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
@@ -11,9 +10,9 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class PendingRacesComponent implements OnInit {
   races: Array<RaceModel> = [];
-  constructor(private raceService: RaceService, private route: ActivatedRoute) {}
+  constructor(private route: ActivatedRoute) {}
 
   ngOnInit() {
-    this.route.data.subscribe(data => (this.races = data['races']));
+    this.races = this.route.snapshot.data['races'];
   }
 }

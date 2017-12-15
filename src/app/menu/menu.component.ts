@@ -31,7 +31,7 @@ export class MenuComponent implements OnInit, OnDestroy {
               )
             : Observable.of(null)
       )
-      .subscribe(userScore => (this.user = userScore));
+      .subscribe(userWithScore => (this.user = userWithScore));
   }
 
   ngOnDestroy() {
